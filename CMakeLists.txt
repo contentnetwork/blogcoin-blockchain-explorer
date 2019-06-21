@@ -17,9 +17,9 @@ if (NOT BITTORO_DIR)
     set(BITTORO_DIR ~/bittoro)
 endif()
 
-message(STATUS LOKI_DIR ": ${LOKI_DIR}")
+message(STATUS BITTORO_DIR ": ${BITTORO_DIR}")
 
-set(LOKI_SOURCE_DIR ${LOKI_DIR}
+set(LOKI_SOURCE_DIR ${BITTORO_DIR}
         CACHE PATH "Path to the root directory for Loki")
 
 # set location of loki build tree
