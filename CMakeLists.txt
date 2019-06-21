@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 set(PROJECT_NAME
-        lokblocks)
+        xtorblocks)
 
 
 project(${PROJECT_NAME})
@@ -13,8 +13,8 @@ if (WIN32)
 endif()
 
 
-if (NOT LOKI_DIR)
-    set(LOKI_DIR ~/loki)
+if (NOT BITTORO_DIR)
+    set(BITTORO_DIR ~/bittoro)
 endif()
 
 message(STATUS LOKI_DIR ": ${LOKI_DIR}")

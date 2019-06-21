@@ -1,6 +1,6 @@
-# Onion Loki Blockchain Explorer
+# Onion BitToro Blockchain Explorer
 
-Currently available Loki blockchain explorers have several limitations which are of 
+Currently available BitToro blockchain explorers have several limitations which are of 
 special importance to privacy-oriented users:
 
  - they use JavaScript,
@@ -8,20 +8,20 @@ special importance to privacy-oriented users:
  - track users activates through google analytics,
  - are closed sourced,
  - are not available as hidden services,
- - do not support Loki testnet nor stagenet networks,
+ - do not support BitToro testnet nor stagenet networks,
  - have limited JSON API.
 
 
 In this example, these limitations are addressed by development of
-an Onion Loki Blockchain Explorer. The example not only shows how to use 
-Loki C++ libraries, but also demonstrates how to use:
+an Onion BitToro Blockchain Explorer. The example not only shows how to use 
+BitToro C++ libraries, but also demonstrates how to use:
 
  - [crow](https://github.com/ipkn/crow) - C++ micro web framework
  - [mstch](https://github.com/no1msd/mstch) - C++ {{mustache}} templates
  - [json](https://github.com/nlohmann/json) - JSON for Modern C++
  - [fmt](https://github.com/fmtlib/fmt) - Small, safe and fast string formatting library
 
-## Onion Loki Blockchain Explorer features
+## Onion BitToro Blockchain Explorer features
  - no cookies, no web analytics trackers, no images,
  - by default no JavaScript, but can be enabled for client side decoding and proving transactions,
  - open sourced,
@@ -29,12 +29,12 @@ Loki C++ libraries, but also demonstrates how to use:
  - showing encrypted payments ID,
  - showing ring signatures,
  - showing transaction extra field,
- - showing public components of Loki addresses,
- - decoding which outputs and mixins belong to the given Loki address and viewkey,
- - can prove that you send Loki to someone,
+ - showing public components of BitToro addresses,
+ - decoding which outputs and mixins belong to the given BitToro address and viewkey,
+ - can prove that you send BitToro to someone,
  - detailed information about mixins, such as, mixins' age, timescale, mixin of mixins,
  - showing number of amount output indices,
- - support Loki testnet, stagenet network,
+ - support BitToro testnet, stagenet network,
  - tx checker and pusher for online pushing of transactions,
  - estimate possible spendings based on address and viewkey,
  - can provide total amount of all miner fees,
@@ -52,12 +52,12 @@ Current development branch:
 
 ## Compilation on Ubuntu 16.04/18.04
 
-##### Compile latest Loki master version
+##### Compile latest BitToro master version
 
-Download and compile recent Loki into your home folder:
+Download and compile recent BitToro into your home folder:
 
 ```bash
-# first install Loki dependecines
+# first install BitToro dependecines
 sudo apt update
 
 sudo apt install git build-essential cmake libboost-all-dev miniupnpc libunbound-dev graphviz doxygen libunwind8-dev pkg-config libssl-dev libcurl4-openssl-dev libgtest-dev libreadline-dev libzmq3-dev libsodium-dev libhidapi-dev libhidapi-libusb0
@@ -65,24 +65,24 @@ sudo apt install git build-essential cmake libboost-all-dev miniupnpc libunbound
 # go to home folder
 cd ~
 
-git clone --recursive https://github.com/loki-project/loki
+git clone --recursive https://github.com/bittoro/bittoro
 
-cd loki/
+cd bittoro/
 
 USE_SINGLE_BUILDDIR=1 make
 ```
 
 ##### Compile and run the explorer
 
-Once the Loki is compiles, the explorer can be downloaded and compiled
+Once the BitToro is compiles, the explorer can be downloaded and compiled
 as follows:
 
 ```bash
-# go to home folder if still in ~/loki
+# go to home folder if still in ~/bittoro
 cd ~
 
 # download the source code
-git clone https://github.com/loki-project/onion-loki-blockchain-explorer.git
+git clone https://github.com/bittoro/onion-xtor-blockchain-explorer.git
 
 # enter the downloaded sourced code folder
 cd onion-loki-blockchain-explorer
@@ -93,8 +93,8 @@ mkdir build && cd build
 # create the makefile
 cmake ..
 
-# alternatively can use: cmake -DLOKI_DIR=/path/to/loki ..
-# if loki is not in ~/loki
+# alternatively can use: cmake -DLOKI_DIR=/path/to/bittoro ..
+# if bittoro is not in ~/bittoro
 #
 # also can build with ASAN (sanitizers), for example
 # cmake -DSANITIZE_ADDRESS=On ..
@@ -103,22 +103,22 @@ cmake ..
 make
 ```
 
-When compilation finishes executable `lokblocks` should be created. Before running
+When compilation finishes executable `xtorblocks` should be created. Before running
 please make sure that  `~/Downloads` folder exists and is writable. 
 Time zone library that explorer is using, puts there 
 its database of time zone offsets
 
 To run it:
 ```
-./lokblocks
+./xtorblocks
 ```
 
-By default it will look for blockchain in its default location i.e., `~/.loki/lmdb`.
+By default it will look for blockchain in its default location i.e., `~/.bittoro/lmdb`.
 You can use `--bc-path` option if its in different location. 
 Example output:
 
 ```bash
-$ ./lokblocks
+$ ./xtorblocks
 2016-May-28 10:04:49.160280 Blockchain initialized. last block: 1056761, d0.h0.m12.s47 time ago, current difficulty: 1517857750
 (2016-05-28 02:04:49) [INFO    ] Crow/0.1 server is running, local port 8081
 ```
@@ -128,7 +128,7 @@ Go to your browser: http://127.0.0.1:8081
 ## The explorer's command line options
 
 ```
-lokblocks, Onion Loki Blockchain Explorer:
+xtorblocks, Onion BitToro Blockchain Explorer:
   -h [ --help ] [=arg(=1)] (=0)         produce help message
   -t [ --testnet ] [=arg(=1)] (=0)      use testnet blockchain
   -s [ --stagenet ] [=arg(=1)] (=0)     use stagenet blockchain
@@ -152,7 +152,7 @@ lokblocks, Onion Loki Blockchain Explorer:
                                         enable users to have the index page on
                                         autorefresh
   --enable-emission-monitor [=arg(=1)] (=0)
-                                        enable Loki total emission monitoring
+                                        enable BitToro total emission monitoring
                                         thread
   -p [ --port ] arg (=8081)             default explorer port
   --testnet-url arg                     you can specify testnet url, if you run
@@ -177,29 +177,29 @@ lokblocks, Onion Loki Blockchain Explorer:
   --ssl-key-file arg                    path to key file for ssl (https)
                                         functionality
   -d [ --daemon-url ] arg (=http:://127.0.0.1:22023)
-                                        Loki daemon url
+                                        BitToro daemon url
 ```
 
 Example usage, defined as bash aliases.
 
 ```bash
 # for mainnet explorer
-alias lokblocksmainnet='~/onion-loki-blockchain-explorer/build/lokblocks    --port 8081 --testnet-url "http://139.162.32.245:8082" --enable-pusher --enable-emission-monitor'
+alias xtorblocksmainnet='~/onion-loki-blockchain-explorer/build/xtorblocks    --port 8081 --testnet-url "http://139.162.32.245:8082" --enable-pusher --enable-emission-monitor'
 
 # for testnet explorer
-alias lokblockstestnet='~/onion-loki-blockchain-explorer/build/lokblocks -t --port 8082 --mainnet-url "http://139.162.32.245:8081" --enable-pusher --enable-emission-monitor'
+alias xtorblockstestnet='~/onion-loki-blockchain-explorer/build/xtorblocks -t --port 8082 --mainnet-url "http://139.162.32.245:8081" --enable-pusher --enable-emission-monitor'
 ```
 
 These are aliases similar to those used for http://139.162.32.245:8081/ and http://139.162.32.245:8082/, respectively.
 
-## Enable Loki emission 
+## Enable BitToro emission 
 
-Obtaining current Loki emission amount is not straight forward. Thus, by default it is 
+Obtaining current BitToro emission amount is not straight forward. Thus, by default it is 
 disabled. To enable it use `--enable-emission-monitor` flag, e.g., 
 
 
 ```bash
-lokblocks --enable-emission-monitor 
+xtorblocks --enable-emission-monitor 
 ```
 
 This flag will enable emission monitoring thread. When started, the thread
@@ -223,10 +223,10 @@ Every 10000 blocks, the thread will save current emission in a file, by default,
  displayed on the front page, e.g., :
 
 ```
-Loki emission (fees) is 14485540.430 (52545.373) as of 1313448 block
+BitToro emission (fees) is 14485540.430 (52545.373) as of 1313448 block
 ```
 
-The values given, can be checked using Loki daemon's  `print_coinbase_tx_sum` command. 
+The values given, can be checked using BitToro daemon's  `print_coinbase_tx_sum` command. 
 For example, for the above example: `print_coinbase_tx_sum 0 1313449`.
 
 To disable the monitor, simply restart the explorer without `--enable-emission-monitor` flag.
@@ -237,7 +237,7 @@ By default, decoding and proving tx's outputs are done on the server side. To do
 (private view and tx keys are not send to the server) JavaScript-based decoding can be enabled:
 
 ```
-lokblocks --enable-js
+xtorblocks --enable-js
 ```
 
 ## Enable SSL (https)
@@ -253,10 +253,10 @@ openssl req -new -key server.key -out server.csr
 openssl x509 -req -days 3650 -in server.csr -signkey server.key -out server.crt
 ```
 
-Having the `crt` and `key` files, run `lokblocks` in the following way:
+Having the `crt` and `key` files, run `xtorblocks` in the following way:
 
 ```bash
-./lokblocks --ssl-crt-file=/tmp/server.crt --ssl-key-file=/tmp/server.key 
+./xtorblocks --ssl-crt-file=/tmp/server.crt --ssl-key-file=/tmp/server.key 
 ```
 
 Note: Because we generated our own certificate, modern browsers will complain
@@ -269,7 +269,7 @@ The explorer has JSON api. For the API, it uses conventions defined by [JSend](h
 By default the api is disabled. To enable it, use `--enable-json-api` flag, e.g.,
 
 ```
-./lokblocks --enable-json-api
+./xtorblocks --enable-json-api
 ```
 
 #### api/transaction/<tx_hash>
@@ -753,7 +753,7 @@ var api_minor = response.data.api & 0xffff;
 
 #### api/rawblock/<block_number|block_hash>
 
-Return raw json block data, as represented in Loki.
+Return raw json block data, as represented in BitToro.
 
 ```bash
 curl  -w "\n" -X GET "http://139.162.32.245:8081/api/rawblock/1293257"
@@ -763,7 +763,7 @@ Example result not shown.
 
 #### api/rawtransaction/<tx_hash>
 
-Return raw json tx data, as represented in Loki.
+Return raw json tx data, as represented in BitToro.
 
 ```bash
 curl  -w "\n" -X GET "http://139.162.32.245:8081/api/rawtransaction/6093260dbe79fd6277694d14789dc8718f1bd54457df8bab338c2efa3bb0f03d"
