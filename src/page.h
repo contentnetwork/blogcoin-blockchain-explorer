@@ -4700,9 +4700,9 @@ search(string search_text)
     result_html = default_txt;
 
 
-    // check if loki address is given based on its length
+    // check if bittoro address is given based on its length
     // if yes, then we can only show its public components
-    if (search_str_length == 95)
+    if (search_str_length == 98)
     {
         // parse string representing given loki address
         address_parse_info address_info;
