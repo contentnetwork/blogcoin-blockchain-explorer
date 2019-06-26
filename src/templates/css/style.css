@@ -22,7 +22,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .PageButton {
-    background-color: #482611;
+    background-color: #e39651;
     min-height: 1.5em;
     padding: 5px;
     padding-top: 8px;
@@ -58,13 +58,13 @@ h1, h2, h3, h4, h5, h6 {
 
 .TableHeader {
     font-weight: bold;
-    background-color: #482611;
+    background-color: #e39651;
 }
 
 .TitleDivider {
     height: 2px;
     width: 100%;
-    background-color: #482611;
+    background-color: #e39651;
     margin-bottom: 1em;
 }
 
@@ -125,7 +125,7 @@ form {
 
 .style-1 input[type="text"]:focus,
 .style-1 input[type="text"].focus {
-    border: solid 1px #482611;
+    border: solid 1px #e39651;
 }
 h1, h2, h3, h4, h5, h6 { color: white; }
 
@@ -163,11 +163,11 @@ h1, h2, h3, h4, h5, h6 { color: white; }
     padding-top: 20px;
     padding-right: 20px;
     padding-bottom: 20px;
-    border-top: 2px solid #482611;
+    border-top: 2px solid #e39651;
 }
 
 [type=radio]:checked ~ label {
-    background: #482611 ;
+    background: #e39651 ;
     z-index: 2;
 }
 
