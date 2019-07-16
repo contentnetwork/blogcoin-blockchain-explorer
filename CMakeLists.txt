@@ -13,13 +13,13 @@ if (WIN32)
 endif()
 
 
-if (NOT BITTORO_DIR)
-    set(BITTORO_DIR ~/blogcoin)
+if (NOT BLOGCOIN_DIR)
+    set(BLOGCOIN_DIR ~/blogcoin)
 endif()
 
-message(STATUS BITTORO_DIR ": ${BITTORO_DIR}")
+message(STATUS BLOGCOIN_DIR ": ${BLOGCOIN_DIR}")
 
-set(LOKI_SOURCE_DIR ${BITTORO_DIR}
+set(LOKI_SOURCE_DIR ${BLOGCOIN_DIR}
         CACHE PATH "Path to the root directory for Loki")
 
 # set location of loki build tree
