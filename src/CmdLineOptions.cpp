@@ -18,7 +18,7 @@ namespace lokeg
         p.add("txhash", -1);
 
         options_description desc(
-                "xtorblocks, Onion BitToro Blockchain Explorer");
+                "xtorblocks, Onion BlogCoin Blockchain Explorer");
 
         desc.add_options()
                 ("help,h", value<bool>()->default_value(false)->implicit_value(true),
@@ -50,8 +50,8 @@ namespace lokeg
                 ("enable-autorefresh-option", value<bool>()->default_value(false)->implicit_value(true),
                  "enable users to have the index page on autorefresh")
                 ("enable-emission-monitor", value<bool>()->default_value(false)->implicit_value(true),
-                 "enable BitToro total emission monitoring thread")
-                ("port,p", value<string>()->default_value("8081"),
+                 "enable BlogCoin total emission monitoring thread")
+                ("port,p", value<string>()->default_value("8380"),
                  "default explorer port")
                 ("bindaddr,x", value<string>()->default_value("0.0.0.0"),
                  "default bind address for the explorer")
@@ -68,13 +68,13 @@ namespace lokeg
                 ("mempool-refresh-time", value<string>()->default_value("5"),
                  "time, in seconds, for each refresh of mempool state")
                 ("bc-path,b", value<string>(),
-                 "path to lmdb folder of the blockchain, e.g., ~/.bittoro/lmdb")
+                 "path to lmdb folder of the blockchain, e.g., ~/.blogcoin/lmdb")
                 ("ssl-crt-file", value<string>(),
                  "path to crt file for ssl (https) functionality")
                 ("ssl-key-file", value<string>(),
                  "path to key file for ssl (https) functionality")
-                ("daemon-url,d", value<string>()->default_value("http:://127.0.0.1:11045"),
-                 "BitToro daemon url");
+                ("daemon-url,d", value<string>()->default_value("http:://127.0.0.1:19293"),
+                 "BlogCoin daemon url");
 
 
         store(command_line_parser(acc, avv)

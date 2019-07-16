@@ -1,6 +1,6 @@
-# Onion BitToro Blockchain Explorer
+# Onion BlogCoin Blockchain Explorer
 
-Currently available BitToro blockchain explorers have several limitations which are of 
+Currently available BlogCoin blockchain explorers have several limitations which are of 
 special importance to privacy-oriented users:
 
  - they use JavaScript,
@@ -8,20 +8,20 @@ special importance to privacy-oriented users:
  - track users activates through google analytics,
  - are closed sourced,
  - are not available as hidden services,
- - do not support BitToro testnet nor stagenet networks,
+ - do not support BlogCoin testnet nor stagenet networks,
  - have limited JSON API.
 
 
 In this example, these limitations are addressed by development of
-an Onion BitToro Blockchain Explorer. The example not only shows how to use 
-BitToro C++ libraries, but also demonstrates how to use:
+an Onion BlogCoin Blockchain Explorer. The example not only shows how to use 
+BlogCoin C++ libraries, but also demonstrates how to use:
 
  - [crow](https://github.com/ipkn/crow) - C++ micro web framework
  - [mstch](https://github.com/no1msd/mstch) - C++ {{mustache}} templates
  - [json](https://github.com/nlohmann/json) - JSON for Modern C++
  - [fmt](https://github.com/fmtlib/fmt) - Small, safe and fast string formatting library
 
-## Onion BitToro Blockchain Explorer features
+## Onion BlogCoin Blockchain Explorer features
  - no cookies, no web analytics trackers, no images,
  - by default no JavaScript, but can be enabled for client side decoding and proving transactions,
  - open sourced,
@@ -29,12 +29,12 @@ BitToro C++ libraries, but also demonstrates how to use:
  - showing encrypted payments ID,
  - showing ring signatures,
  - showing transaction extra field,
- - showing public components of BitToro addresses,
- - decoding which outputs and mixins belong to the given BitToro address and viewkey,
- - can prove that you send BitToro to someone,
+ - showing public components of BlogCoin addresses,
+ - decoding which outputs and mixins belong to the given BlogCoin address and viewkey,
+ - can prove that you send BlogCoin to someone,
  - detailed information about mixins, such as, mixins' age, timescale, mixin of mixins,
  - showing number of amount output indices,
- - support BitToro testnet, stagenet network,
+ - support BlogCoin testnet, stagenet network,
  - tx checker and pusher for online pushing of transactions,
  - estimate possible spendings based on address and viewkey,
  - can provide total amount of all miner fees,
@@ -52,12 +52,12 @@ Current development branch:
 
 ## Compilation on Ubuntu 16.04/18.04
 
-##### Compile latest BitToro master version
+##### Compile latest BlogCoin master version
 
-Download and compile recent BitToro into your home folder:
+Download and compile recent BlogCoin into your home folder:
 
 ```bash
-# first install BitToro dependecines
+# first install BlogCoin dependecines
 sudo apt update
 
 sudo apt install git build-essential cmake libboost-all-dev miniupnpc libunbound-dev graphviz doxygen libunwind8-dev pkg-config libssl-dev libcurl4-openssl-dev libgtest-dev libreadline-dev libzmq3-dev libsodium-dev libhidapi-dev libhidapi-libusb0
@@ -65,27 +65,27 @@ sudo apt install git build-essential cmake libboost-all-dev miniupnpc libunbound
 # go to home folder
 cd ~
 
-git clone --recursive https://github.com/bittoro/bittoro
+git clone --recursive https://github.com/contentnetwork/blogcoin
 
-cd bittoro/
+cd blogcoin/
 
 USE_SINGLE_BUILDDIR=1 make
 ```
 
 ##### Compile and run the explorer
 
-Once the BitToro is compiles, the explorer can be downloaded and compiled
+Once the BlogCoin is compiled, the explorer can be downloaded and compiled
 as follows:
 
 ```bash
-# go to home folder if still in ~/bittoro
+# go to home folder if still in ~/blogcoin
 cd ~
 
 # download the source code
-git clone https://github.com/bittoro/onion-xtor-blockchain-explorer.git
+git clone https://github.com/blogcoin/blogcoin-blockchain-explorer.git
 
 # enter the downloaded sourced code folder
-cd onion-loki-blockchain-explorer
+cd blogcoin-blockchain-explorer
 
 # make a build folder and enter it
 mkdir build && cd build
@@ -93,8 +93,8 @@ mkdir build && cd build
 # create the makefile
 cmake ..
 
-# alternatively can use: cmake -DLOKI_DIR=/path/to/bittoro ..
-# if bittoro is not in ~/bittoro
+# alternatively can use: cmake -DLOKI_DIR=/path/to/blogcoin ..
+# if blogcoin is not in ~/blogcoin
 #
 # also can build with ASAN (sanitizers), for example
 # cmake -DSANITIZE_ADDRESS=On ..
@@ -113,7 +113,7 @@ To run it:
 ./xtorblocks
 ```
 
-By default it will look for blockchain in its default location i.e., `~/.bittoro/lmdb`.
+By default it will look for blockchain in its default location i.e., `~/.blogcoin/lmdb`.
 You can use `--bc-path` option if its in different location. 
 Example output:
 
@@ -128,7 +128,7 @@ Go to your browser: http://127.0.0.1:8081
 ## The explorer's command line options
 
 ```
-xtorblocks, Onion BitToro Blockchain Explorer:
+xtorblocks, Onion BlogCoin Blockchain Explorer:
   -h [ --help ] [=arg(=1)] (=0)         produce help message
   -t [ --testnet ] [=arg(=1)] (=0)      use testnet blockchain
   -s [ --stagenet ] [=arg(=1)] (=0)     use stagenet blockchain
@@ -152,7 +152,7 @@ xtorblocks, Onion BitToro Blockchain Explorer:
                                         enable users to have the index page on
                                         autorefresh
   --enable-emission-monitor [=arg(=1)] (=0)
-                                        enable BitToro total emission monitoring
+                                        enable BlogCoin total emission monitoring
                                         thread
   -p [ --port ] arg (=8081)             default explorer port
   --testnet-url arg                     you can specify testnet url, if you run
@@ -177,7 +177,7 @@ xtorblocks, Onion BitToro Blockchain Explorer:
   --ssl-key-file arg                    path to key file for ssl (https)
                                         functionality
   -d [ --daemon-url ] arg (=http:://127.0.0.1:22023)
-                                        BitToro daemon url
+                                        BlogCoin daemon url
 ```
 
 Example usage, defined as bash aliases.
@@ -192,9 +192,9 @@ alias xtorblockstestnet='~/onion-loki-blockchain-explorer/build/xtorblocks -t --
 
 These are aliases similar to those used for http://139.162.32.245:8081/ and http://139.162.32.245:8082/, respectively.
 
-## Enable BitToro emission 
+## Enable BlogCoin emission 
 
-Obtaining current BitToro emission amount is not straight forward. Thus, by default it is 
+Obtaining current BlogCoin emission amount is not straight forward. Thus, by default it is 
 disabled. To enable it use `--enable-emission-monitor` flag, e.g., 
 
 
@@ -223,10 +223,10 @@ Every 10000 blocks, the thread will save current emission in a file, by default,
  displayed on the front page, e.g., :
 
 ```
-BitToro emission (fees) is 14485540.430 (52545.373) as of 1313448 block
+BlogCoin emission (fees) is 14485540.430 (52545.373) as of 1313448 block
 ```
 
-The values given, can be checked using BitToro daemon's  `print_coinbase_tx_sum` command. 
+The values given, can be checked using BlogCoin daemon's  `print_coinbase_tx_sum` command. 
 For example, for the above example: `print_coinbase_tx_sum 0 1313449`.
 
 To disable the monitor, simply restart the explorer without `--enable-emission-monitor` flag.
@@ -753,7 +753,7 @@ var api_minor = response.data.api & 0xffff;
 
 #### api/rawblock/<block_number|block_hash>
 
-Return raw json block data, as represented in BitToro.
+Return raw json block data, as represented in BlogCoin.
 
 ```bash
 curl  -w "\n" -X GET "http://139.162.32.245:8081/api/rawblock/1293257"
@@ -763,7 +763,7 @@ Example result not shown.
 
 #### api/rawtransaction/<tx_hash>
 
-Return raw json tx data, as represented in BitToro.
+Return raw json tx data, as represented in BlogCoin.
 
 ```bash
 curl  -w "\n" -X GET "http://139.162.32.245:8081/api/rawtransaction/6093260dbe79fd6277694d14789dc8718f1bd54457df8bab338c2efa3bb0f03d"

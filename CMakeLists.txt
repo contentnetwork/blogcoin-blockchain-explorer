@@ -14,7 +14,7 @@ endif()
 
 
 if (NOT BITTORO_DIR)
-    set(BITTORO_DIR ~/bittoro)
+    set(BITTORO_DIR ~/blogcoin)
 endif()
 
 message(STATUS BITTORO_DIR ": ${BITTORO_DIR}")

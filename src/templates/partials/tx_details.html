@@ -124,7 +124,7 @@
         <div class="TitleDivider"></div>
         <p>Service Node Public Key: {{contribution_service_node_pubkey}}</p>
         <p>Contributor Address: {{contribution_address}}</p>
-        <p>Contribution Amount: {{contribution_amount}} XTOR</p>
+        <p>Contribution Amount: {{contribution_amount}} BLOG</p>
     {{/have_contribution_info}}
 
 
@@ -155,7 +155,7 @@
                 <input type="radio" id="tab-1" name="tab-group-1" checked>
                 <label for="tab-1">Decode Outputs</label>
                 <div class="content">
-                    <p style="margin: 0px">Check which outputs belong to given BitToro address/subaddress and viewkey</p>
+                    <p style="margin: 0px">Check which outputs belong to given BlogCoin address/subaddress and viewkey</p>
                     <p style="margin: 0px">
                         For RingCT transactions, outputs' amounts are also decoded
                         <br/>
@@ -168,7 +168,7 @@
                     </p>
                     <form action="/myoutputs" method="post" style="width:100%; margin-top:2px" class="style-1">
                         <input type="hidden" name="tx_hash" value="{{tx_hash}}"><br/>
-                        <input type="text" name="lok_address" size="110" placeholder="BitToro Address/Subaddress"><br/>
+                        <input type="text" name="lok_address" size="110" placeholder="BlogCoin Address/Subaddress"><br/>
                         <input type="text" name="viewkey" size="110" placeholder="Private Viewkey" style="margin-top:5px"><br/>
                         <input type="hidden" name="raw_tx_data" value="{{raw_tx_data}}">
                         <!--above raw_tx_data field only used when checking raw tx data through tx pusher-->
@@ -190,7 +190,7 @@
                 <label for="tab-2">Prove Sending</label>
 
                 <div class="content">
-                    <p style="margin: 0px">Prove to someone that you have sent them BitToro in this transaction</p>
+                    <p style="margin: 0px">Prove to someone that you have sent them BlogCoin in this transaction</p>
                     <p style="margin: 0px">
                         TX private key can be obtained using <i>get_tx_key</i>
                         command in  <i>bittoro-wallet-cli</i> command line tool
@@ -207,7 +207,7 @@
                        <input type="text" name="txprvkey" size="120" placeholder="TX Private Key"><br/>
                         <input type="hidden" name="raw_tx_data" value="{{raw_tx_data}}">
                         <!--above raw_tx_data field only used when checking raw tx data through tx pusher-->
-                       <input type="text" name="lokaddress" size="120" placeholder="Recipient's BitToro Address/Subaddress" style="margin-top:5px"><br/>
+                       <input type="text" name="lokaddress" size="120" placeholder="Recipient's BlogCoin Address/Subaddress" style="margin-top:5px"><br/>
 
                         {{#enable_js}}
                             <!-- if have js, DONOT submit the form to server.
