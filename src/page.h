@@ -6791,7 +6791,7 @@ construct_tx_context(transaction tx, uint16_t with_ring_signatures = 0)
                     if (response.status == "OK" && !response.quorums.empty()) {
                         auto &quorum = response.quorums[0].quorum;
                         if (state_change.service_node_index < quorum.workers.size())
-                            context["state_change_service_node_pubkey"] = pod_to_hex(quorum.workers[state_change.service_node_index]);
+                            context["state_change_service_node_pubkey"] = quorum.workers[state_change.service_node_index];
                         quorum_nodes.reserve(quorum.validators.size());
                         for (auto &v : quorum.validators)
                             quorum_nodes.push_back(pod_to_hex(v));
