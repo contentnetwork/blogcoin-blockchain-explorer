@@ -785,7 +785,7 @@ std::string make_service_node_expiry_time_str(COMMAND_RPC_GET_SERVICE_NODES::res
   return result;
 }
 
-mstch::array gather_sn_data(const std::vector<crypto::public_key> &nodes, const sn_entry_map &sn_map, const size_t sn_display_limit)
+mstch::array gather_sn_data(const std::vector<std::string> &nodes, const sn_entry_map &sn_map, const size_t sn_display_limit)
 {
     mstch::array data;
     data.reserve(nodes.size());
@@ -6794,7 +6794,7 @@ construct_tx_context(transaction tx, uint16_t with_ring_signatures = 0)
                             context["state_change_service_node_pubkey"] = quorum.workers[state_change.service_node_index];
                         quorum_nodes.reserve(quorum.validators.size());
                         for (auto &v : quorum.validators)
-                            quorum_nodes.push_back(pod_to_hex(v));
+                            quorum_nodes.push_back(v);
                         context["state_change_have_pubkey_info"] = true;
                     }
                 }
