@@ -929,8 +929,8 @@ render_checkpoints_html(bool add_header_and_footer)
     checkpoints.reserve(response.checkpoints.size());
     for (const auto &cp : response.checkpoints) {
         mstch::map checkpoint;
-        checkpoint.emplace("checkpoint_type", checkpoint_t::type_to_string(cp.type));
-        checkpoint.emplace("checkpoint_block_hash", epee::string_tools::pod_to_hex(cp.block_hash));
+        checkpoint.emplace("checkpoint_type", cp.type);
+        checkpoint.emplace("checkpoint_block_hash", cp.block_hash);
         checkpoint.emplace("checkpoint_height", cp.height);
         checkpoint.emplace("checkpoint_quorum", cp.height - service_nodes::REORG_SAFETY_BUFFER_BLOCKS_POST_HF12);
         mstch::array signatures;
