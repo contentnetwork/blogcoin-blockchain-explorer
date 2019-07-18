@@ -942,7 +942,7 @@ render_checkpoints_html(bool add_header_and_footer)
         for (const auto &s : cp.signatures) {
             mstch::map sig_info;
             sig_info.emplace("checkpoint_signer_voter_index", s.voter_index);
-            sig_info.emplace("checkpoint_signature", epee::string_tools::pod_to_hex(s.signature));
+            sig_info.emplace("checkpoint_signature", s.signature);
             signatures.push_back(std::move(sig_info));
             boost::get<mstch::map>(voter_signed[s.voter_index]).emplace("voter_signed", true);
         }
