@@ -794,7 +794,7 @@ mstch::array gather_sn_data(const std::vector<std::string> &nodes, const sn_entr
     const size_t max = std::min(sn_display_limit, nodes.size());
     for (size_t i = 0; i < max; i++) {
         const auto &pub_key = nodes[i];
-        const std::string pk_str = pod_to_hex(pub_key);
+        const std::string pk_str = pub_key;
         mstch::map array_entry{{"public_key", pk_str}, {"quorum_index", std::to_string(i)}};
 
         auto it = sn_map.find(pk_str);
