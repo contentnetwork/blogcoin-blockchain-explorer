@@ -850,7 +850,7 @@ mstch::map get_quorum_state_context(uint64_t start_height, uint64_t end_height, 
     for (const auto &quorum_type : quorum_types) {
         auto &quorum_array = boost::get<mstch::array>(page_context[quorum_type.second + "_quorum_array"]);
         for (const auto &entry : response.quorums) {
-            auto group_display_limit = sn_display_limit;
+            size_t group_display_limit = sn_display_limit;
             auto qt = static_cast<service_nodes::quorum_type>(entry.quorum_type);
             if (qt != quorum_type.first)
                 continue;
