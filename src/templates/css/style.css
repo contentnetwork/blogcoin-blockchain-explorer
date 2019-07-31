@@ -232,12 +232,22 @@ td.quorum-pubkey span {
 
 th.subheader {
     text-align: left;
-    border-bottom: 2px solid #008522;
+    border-bottom: 2px solid #e39651;
 }
 
-td span.checkpoint-signed { color: #008522; }
+td span.checkpoint-signed { color: #e39651; }
 td span.checkpoint-not-signed { color: #c50022; }
 
 .omg {
     font-weight: bold;
+}
+
+.pending-mempool-stakes .tx {
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.TXType {
+  font-family: initial;
 }

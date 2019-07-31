@@ -793,8 +793,7 @@ mstch::array gather_sn_data(const std::vector<std::string> &nodes, const sn_entr
 
     const size_t max = std::min(sn_display_limit, nodes.size());
     for (size_t i = 0; i < max; i++) {
-        const auto &pub_key = nodes[i];
-        const std::string pk_str = pub_key;
+        const auto &pk_str = nodes[i];
         mstch::map array_entry{{"public_key", pk_str}, {"quorum_index", std::to_string(i)}};
 
         auto it = sn_map.find(pk_str);
@@ -851,20 +850,21 @@ mstch::map get_quorum_state_context(uint64_t start_height, uint64_t end_height, 
     for (const auto &quorum_type : quorum_types) {
         auto &quorum_array = boost::get<mstch::array>(page_context[quorum_type.second + "_quorum_array"]);
         for (const auto &entry : response.quorums) {
+            auto group_display_limit = sn_display_limit;
             auto qt = static_cast<service_nodes::quorum_type>(entry.quorum_type);
             if (qt != quorum_type.first)
                 continue;
 
             mstch::map quorum_part;
             quorum_part.emplace("quorum_height", entry.height);
-            auto validators = gather_sn_data(entry.quorum.validators, pk2sninfo, sn_display_limit);
+            auto validators = gather_sn_data(entry.quorum.validators, pk2sninfo, group_display_limit);
             quorum_part.emplace("quorum_validators_size", entry.quorum.validators.size());
             if (validators.size() < entry.quorum.validators.size())
                 quorum_part.emplace("quorum_validators_more", entry.quorum.validators.size() - validators.size());
+            group_display_limit -= validators.size();
             quorum_part.emplace("quorum_validators", std::move(validators));
 
-            sn_display_limit -= validators.size();
-            auto workers = gather_sn_data(entry.quorum.workers, pk2sninfo, sn_display_limit);
+            auto workers = gather_sn_data(entry.quorum.workers, pk2sninfo, group_display_limit);
             quorum_part.emplace("quorum_workers_size", entry.quorum.workers.size());
             if (workers.size() < entry.quorum.workers.size())
                 quorum_part.emplace("quorum_workers_more", entry.quorum.workers.size() - workers.size());
@@ -964,6 +964,27 @@ render_checkpoints_html(bool add_header_and_footer)
     return mstch::render(template_file["checkpoints_full"], page_context);
 }
 
+static std::string tx_type_to_emoji(cryptonote::transaction const &tx, uint8_t hf_version)
+{
+  std::string result;
+  if (tx.type == cryptonote::txtype::state_change)
+  {
+    tx_extra_service_node_state_change state_change;
+    if (get_service_node_state_change_from_tx_extra(tx.extra, state_change, hf_version))
+    {
+      if (state_change.state == service_nodes::new_state::deregister) result = "\xF0\x9F\x9A\xAB"; // no entry
+      if (state_change.state == service_nodes::new_state::decommission) result = "\xF0\x9F\x91\x8E"; // thumbs down
+      if (state_change.state == service_nodes::new_state::recommission) result = "\xF0\x9F\x91\x8D"; // thumbs up
+      if (state_change.state == service_nodes::new_state::ip_change_penalty) result = "\xF0\x9F\x93\x8B"; // clipboard
+    }
+  }
+  else if (tx.type == cryptonote::txtype::key_image_unlock)
+  {
+    result = "\xF0\x9F\x94\x93"; // open lock
+  }
+
+  return result;
+}
 
 /**
  * @brief show recent transactions and mempool
@@ -1229,9 +1250,7 @@ index2(uint64_t page_no = 0, bool refresh_page = false)
             for(auto it = blk_txs.begin(); it != blk_txs.end(); ++it)
             {
                 const cryptonote::transaction& tx = *it;
-
                 const tx_details& txd = get_tx_details(tx, false, i, height);
-
                 mstch::map txd_map = txd.get_mstch_map();
 
                 //add age to the txd mstch map
@@ -1241,6 +1260,7 @@ index2(uint64_t page_no = 0, bool refresh_page = false)
                 txd_map.insert({"is_ringct" , tx.version >= cryptonote::txversion::v2_ringct});
                 txd_map.insert({"rct_type"  , tx.rct_signatures.type});
                 txd_map.insert({"blk_size"  , blk_size_str});
+                txd_map.insert({"tx_type"   , tx_type_to_emoji(tx, blk.major_version)});
 
 
                 // do not show block info for other than first tx in a block
@@ -1490,6 +1510,7 @@ mempool(bool add_header_and_footer = false, uint64_t no_of_mempool_tx = 25)
                 {"timestamp_no"    , mempool_tx.receive_time},
                 {"timestamp"       , mempool_tx.timestamp_str},
                 {"age"             , age_str},
+                {"tx_type"         , tx_type_to_emoji(mempool_tx.tx, MempoolStatus::current_network_info.load().current_hf_version)},
                 {"hash"            , pod_to_hex(mempool_tx.tx_hash)},
                 {"fee"             , mempool_tx.fee_str},
                 {"payed_for_kB"    , mempool_tx.payed_for_kB_str},
@@ -1791,8 +1812,33 @@ show_service_node(const std::string &service_node_pubkey)
       return std::string("Can't get service node pubkey or couldn't find as registered service node: " + service_node_pubkey);
     }
 
+    auto &sn = response.service_node_states[0];
     mstch::map page_context{};
-    set_service_node_fields(page_context, response.service_node_states[0]);
+    set_service_node_fields(page_context, sn);
+
+    if (!sn.funded) {
+        mstch::array pending_stakes;
+        // Check the mempool for pending contributions
+        for (const auto &mempool_tx : MempoolStatus::get_mempool_txs()) {
+            cryptonote::account_public_address contributor;
+            if (get_service_node_contributor_from_tx_extra(mempool_tx.tx.extra, contributor)) {
+                auto sn_key = extract_sn_pubkey(mempool_tx.tx.extra);
+                if (sn_key != service_node_pubkey)
+                    continue;
+                mstch::map contrib;
+                contrib["txid"] = pod_to_hex(mempool_tx.tx_hash);
+			    contrib["address"] = get_account_address_as_str(nettype, false /*is_subaddress*/, contributor);
+                uint64_t amount = get_amount_from_stake(mempool_tx.tx, contributor);
+                contrib["amount"] = amount > 0 ? lokeg::lok_amount_to_str(amount, "{:0.9f}", true) : "<decode error>";
+                pending_stakes.push_back(std::move(contrib));
+            }
+        }
+
+        if (!pending_stakes.empty()) {
+            page_context["pending_stakes_size"] = pending_stakes.size();
+            page_context["pending_stakes"] = std::move(pending_stakes);
+        }
+    }
 
     add_css_style(page_context);
     return mstch::render(template_file["service_node_detail"], page_context);
@@ -2579,13 +2625,13 @@ show_my_outputs(string tx_hash_str,
         return string("Cant get tx hash due to parse error: " + tx_hash_str);
     }
 
-    // parse string representing given loki address
+    // parse string representing given bittoro address
     cryptonote::address_parse_info address_info;
 
     if (!lokeg::parse_str_address(lok_address_str,  address_info, nettype))
     {
         cerr << "Cant parse string address: " << lok_address_str << endl;
-        return string("Cant parse Loki address: " + lok_address_str);
+        return string("Cant parse BitToro address: " + lok_address_str);
     }
 
     // parse string representing given private key
@@ -4714,11 +4760,11 @@ search(string search_text)
     result_html = default_txt;
 
 
-    // check if loki address is given based on its length
+    // check if BitToro address is given based on its length
     // if yes, then we can only show its public components
     if (search_str_length == 98)
     {
-        // parse string representing given loki address
+        // parse string representing given BitToro address
         address_parse_info address_info;
 
         cryptonote::network_type nettype_addr {cryptonote::network_type::MAINNET};
@@ -4740,7 +4786,7 @@ search(string search_text)
 
     // check if integrated loki address is given based on its length
     // if yes, then show its public components search tx based on encrypted id
-    if (search_str_length == 106)
+    if (search_str_length == 109)
     {
 
         cryptonote::account_public_address address;
@@ -6654,6 +6700,40 @@ std::string extract_sn_pubkey(const std::vector<uint8_t> &tx_extra)
     }
 }
 
+inline uint64_t get_amount_from_stake(const cryptonote::transaction &tx, const cryptonote::account_public_address &contributor) {
+    uint64_t amount = 0;
+    crypto::secret_key tx_key;
+    crypto::key_derivation derivation;
+    if (cryptonote::get_tx_secret_key_from_tx_extra(tx.extra, tx_key) &&
+            generate_key_derivation(contributor.m_view_public_key, tx_key, derivation) &&
+            !tx.vout.empty() && tx.vout.back().target.type() == typeid(cryptonote::txout_to_key)) {
+        hw::device &hwdev = hw::get_device("default");
+        // The rules are a bit more complex to do this perfectly, and change depending on
+        // the fork version, but just assuming the stake is in the last tx will work (unless
+        // someone is building non-standard stake transactions manually).
+        size_t tx_offset = tx.vout.size() - 1;
+        rct::key mask;
+        crypto::secret_key scalar1;
+        hwdev.derivation_to_scalar(derivation, tx_offset, scalar1);
+        try {
+            switch (tx.rct_signatures.type) {
+                case rct::RCTTypeSimple:
+                case rct::RCTTypeBulletproof:
+                case rct::RCTTypeBulletproof2:
+                    amount = rct::decodeRctSimple(tx.rct_signatures, rct::sk2rct(scalar1), tx_offset, mask, hwdev);
+                    break;
+                case rct::RCTTypeFull:
+                    amount = rct::decodeRct(tx.rct_signatures, rct::sk2rct(scalar1), tx_offset, mask, hwdev);
+                    break;
+                default:
+                    break;
+            }
+        }
+        catch (const std::exception &e) { /* ignore */ }
+    }
+    return amount;
+}
+
 mstch::map
 construct_tx_context(transaction tx, uint16_t with_ring_signatures = 0)
 {
@@ -6748,6 +6828,8 @@ construct_tx_context(transaction tx, uint16_t with_ring_signatures = 0)
                                                with_ring_signatures)},
             {"tx_json"               , tx_json},
             {"is_ringct"             , tx.version >= cryptonote::txversion::v2_ringct},
+            {"tx_type"               , string(cryptonote::transaction::type_to_string(tx.type))},
+            {"tx_type_emoji"         , tx_type_to_emoji(tx, blk.major_version)},
             {"rct_type"              , tx.rct_signatures.type},
             {"has_error"             , false},
             {"error_msg"             , string("")},
@@ -6769,10 +6851,15 @@ construct_tx_context(transaction tx, uint16_t with_ring_signatures = 0)
             // deregistration transparently).
             tx_extra_service_node_state_change state_change;
             context["is_state_change"] = true;
+#if 1
             bool new_style = get_service_node_state_change_from_tx_extra(tx.extra, state_change, cryptonote::network_version_12_checkpointing);
             if (new_style || get_service_node_state_change_from_tx_extra(tx.extra, state_change, cryptonote::network_version_11_infinite_staking)) {
-                if (new_style)
+               if (new_style)
                     context["state_change_new_style"] = true;
+#else
+            if (get_service_node_state_change_from_tx_extra(tx.extra, state_change, blk.major_version)) {
+                context["state_change_new_style"] = blk.major_version >= cryptonote::network_version_12_checkpointing;
+#endif
                 context["state_change_service_node_index"] = state_change.service_node_index;
                 context["state_change_block_height"] = state_change.block_height;
                 context[
@@ -6792,9 +6879,7 @@ construct_tx_context(transaction tx, uint16_t with_ring_signatures = 0)
                         auto &quorum = response.quorums[0].quorum;
                         if (state_change.service_node_index < quorum.workers.size())
                             context["state_change_service_node_pubkey"] = quorum.workers[state_change.service_node_index];
-                        quorum_nodes.reserve(quorum.validators.size());
-                        for (auto &v : quorum.validators)
-                            quorum_nodes.push_back(v);
+                        quorum_nodes = std::move(quorum.validators);
                         context["state_change_have_pubkey_info"] = true;
                     }
                 }
@@ -6869,36 +6954,7 @@ construct_tx_context(transaction tx, uint16_t with_ring_signatures = 0)
 			context["contribution_service_node_pubkey"] = extract_sn_pubkey(tx.extra);
 			context["contribution_address"]             = get_account_address_as_str(nettype, false /*is_subaddress*/, contributor);
 
-            crypto::secret_key tx_key;
-            crypto::key_derivation derivation;
-            uint64_t amount = 0;
-            if (cryptonote::get_tx_secret_key_from_tx_extra(tx.extra, tx_key) &&
-                    generate_key_derivation(contributor.m_view_public_key, tx_key, derivation) &&
-                    !tx.vout.empty() && tx.vout.back().target.type() == typeid(cryptonote::txout_to_key)) {
-                hw::device &hwdev = hw::get_device("default");
-                // The rules are a bit more complex to do this perfectly, and change depending on
-                // the fork version, but just assuming the stake is in the last tx will work (unless
-                // someone is building non-standard stake transactions manually).
-                size_t tx_offset = tx.vout.size() - 1;
-                rct::key mask;
-                crypto::secret_key scalar1;
-                hwdev.derivation_to_scalar(derivation, tx_offset, scalar1);
-                try {
-                    switch (tx.rct_signatures.type) {
-                        case rct::RCTTypeSimple:
-                        case rct::RCTTypeBulletproof:
-                        case rct::RCTTypeBulletproof2:
-                            amount = rct::decodeRctSimple(tx.rct_signatures, rct::sk2rct(scalar1), tx_offset, mask, hwdev);
-                            break;
-                        case rct::RCTTypeFull:
-                            amount = rct::decodeRct(tx.rct_signatures, rct::sk2rct(scalar1), tx_offset, mask, hwdev);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                catch (const std::exception &e) { /* ignore */ }
-            }
+            uint64_t amount = get_amount_from_stake(tx, contributor);
             context["contribution_amount"] = amount > 0 ? lokeg::lok_amount_to_str(amount, "{:0.9f}", true) : "<decode error>";
         }
     }
