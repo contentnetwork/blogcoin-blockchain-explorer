@@ -13,13 +13,13 @@ if (WIN32)
 endif()
 
 
-if (NOT BLOGCOIN_DIR)
-    set(BLOGCOIN_DIR ~/blogcoin)
+if (NOT CONTENTCOIN_DIR)
+    set(CONTENTCOIN_DIR ~/contentcoin)
 endif()
 
-message(STATUS BLOGCOIN_DIR ": ${BLOGCOIN_DIR}")
+message(STATUS CONTENTCOIN_DIR ": ${CONTENTCOIN_DIR}")
 
-set(LOKI_SOURCE_DIR ${BLOGCOIN_DIR}
+set(LOKI_SOURCE_DIR ${CONTENTCOIN_DIR}
         CACHE PATH "Path to the root directory for Loki")
 
 # set location of loki build tree
