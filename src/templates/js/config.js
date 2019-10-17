@@ -4,10 +4,10 @@ var config = {
     coinUnitPlaces: 9,
     txMinConfirms: 10,         // corresponds to CRYPTONOTE_DEFAULT_TX_SPENDABLE_AGE in Loki
     txCoinbaseMinConfirms: 20, // corresponds to CRYPTONOTE_MINED_MONEY_UNLOCK_WINDOW in Loki
-    coinSymbol: 'BLOG',
-    openAliasPrefix: "blog",
-    coinName: 'BlogCoin',
-    coinUriPrefix: 'blogcoin:',
+    coinSymbol: 'COTE',
+    openAliasPrefix: "cote",
+    coinName: 'ContentCoin',
+    coinUriPrefix: 'contentcoin:',
     addressPrefix: 1847381,
     integratedAddressPrefix: 1880149,
     subAddressPrefix: 1912917,
