@@ -50,7 +50,7 @@ namespace lokeg
                 ("enable-autorefresh-option", value<bool>()->default_value(false)->implicit_value(true),
                  "enable users to have the index page on autorefresh")
                 ("enable-emission-monitor", value<bool>()->default_value(false)->implicit_value(true),
-                 "enable ContentCoin total emission monitoring thread")
+                 "enable Contentcoin total emission monitoring thread")
                 ("port,p", value<string>()->default_value("8380"),
                  "default explorer port")
                 ("bindaddr,x", value<string>()->default_value("0.0.0.0"),
@@ -74,7 +74,9 @@ namespace lokeg
                 ("ssl-key-file", value<string>(),
                  "path to key file for ssl (https) functionality")
                 ("daemon-url,d", value<string>()->default_value("http:://127.0.0.1:19293"),
-                 "ContentCoin daemon url");
+                 "Loki daemon url")
+                ("log-level", value<string>(),
+                 "set log level");
 
 
         store(command_line_parser(acc, avv)
